@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>测一测 | 你自带哪种人格魅力标签</title>
+<meta name="description" content="四十道生活场景选择题，测出你自带的人格魅力标签。不用懂任何术语，凭直觉作答。">
+<meta name="theme-color" content="#F4EFF3">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%23F2F4EE'/%3E%3Crect x='6' y='6' width='52' height='52' rx='4' fill='none' stroke='%23A98540' stroke-width='3'/%3E%3Cpath d='M18 44 L27 28 L34 39 L40 31 L47 44 Z' fill='%231E3733'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://miaoda.feishu.cn">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@400;500;700;900&family=Noto+Sans+SC:wght@300;400;500&display=swap">
+<style>
+:root{
+  --paper:#F4EFF3;
+  --paper-lift:#FCF8FB;
+  --ink:#2B2033;
+  --ink-2:#594A66;
+  --ink-3:#8B7C97;
+  --jade:#A3567A;
+  --jade-soft:rgba(163,86,122,.10);
+  --gold:#8B7C97;
+  --gold-soft:#B7A8C4;
+  --cloud:#A798B2;
+  --line:rgba(43,32,51,.14);
+  --line-2:rgba(43,32,51,.07);
+  --serif:"Noto Serif SC","Songti SC","STSong",serif;
+  --sans:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--sans);color:var(--ink);line-height:1.75;
+  background:
+    radial-gradient(760px 420px at 8% -8%, rgba(206,190,214,.34), transparent 62%),
+    radial-gradient(700px 400px at 102% 2%, rgba(214,204,222,.28), transparent 58%),
+    radial-gradient(900px 500px at 50% 112%, rgba(205,192,209,.18), transparent 60%),
+    var(--paper);
+  min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+
+/* ===== 装饰层：云、星点、山影（不影响正文） ===== */
+.scene{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.grain{
+  position:absolute;inset:0;opacity:.055;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.cloud{position:absolute;border-radius:50%;filter:blur(52px);opacity:.5}
+.cloud-a{width:520px;height:170px;left:-150px;top:10%;background:rgba(255,255,255,.8);animation:driftA 64s ease-in-out infinite}
+.cloud-b{width:420px;height:150px;right:-140px;top:44%;background:rgba(232,222,233,.8);animation:driftB 78s ease-in-out infinite}
+@keyframes driftA{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(26vw,10px,0)}}
+@keyframes driftB{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(-22vw,-8px,0)}}
+.star{position:absolute;width:4px;height:4px;border-radius:50%;background:radial-gradient(circle,#B7A8C4 0%,rgba(180,164,196,0) 70%);animation:twinkle 5.5s ease-in-out infinite}
+.star:nth-child(1){left:14%;top:9%;animation-delay:-1s}
+.star:nth-child(2){left:82%;top:14%;animation-delay:-2.6s}
+.star:nth-child(3){left:30%;top:22%;animation-delay:-4.1s}
+.star:nth-child(4){left:68%;top:6%;animation-delay:-.4s}
+.star:nth-child(5){left:52%;top:30%;animation-delay:-3.2s}
+.star:nth-child(6){left:90%;top:36%;animation-delay:-1.8s;opacity:.4}
+@keyframes twinkle{0%,100%{opacity:.1;transform:scale(.7)}50%{opacity:.55;transform:scale(1)}}
+.mountains{position:absolute;left:0;right:0;bottom:0;height:min(22vh,170px);opacity:.42}
+.mountains svg{width:100%;height:100%;display:block}
+
+/* ===== 版面 ===== */
+.stage{
+  position:relative;z-index:1;max-width:720px;margin:0 auto;
+  padding:clamp(24px,5vh,56px) 26px;min-height:100vh;
+  display:flex;flex-direction:column;
+}
+.view{display:none}
+/* margin:auto 让内容在屏幕竖向居中；内容过长时自动回到顶部，不会顶出屏幕 */
+.view.is-active{display:block;margin-block:auto;animation:rise .5s cubic-bezier(.2,.75,.2,1) both}
+#view-quiz.is-active{margin-block:0;padding-top:clamp(6px,3vh,28px)}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+.seal{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:38px;height:38px;border:1px solid #A3567A;color:#A3567A;
+  font-family:var(--serif);font-weight:700;font-size:19px;line-height:1;
+  letter-spacing:0;border-radius:2px;
+}
+.rule{height:1px;background:var(--line);margin:22px 0}
+.eyebrow{
+  font-size:11px;letter-spacing:.34em;color:#A3567A;font-weight:400;text-indent:.34em;
+}
+
+/* ===== 首页 ===== */
+.start-head{display:flex;justify-content:center}
+.start-title{margin-top:26px;text-align:center}
+.start-pre{
+  display:block;font-size:12px;letter-spacing:.42em;color:#A3567A;
+  text-indent:.42em;margin-bottom:18px;
+}
+.start-pre::before,.start-pre::after{content:none}
+.start-main{
+  display:block;font-family:var(--serif);font-weight:900;
+  font-size:clamp(30px,7.6vw,46px);line-height:1.34;color:var(--ink);
+  letter-spacing:.015em;
+}
+.start-lede{
+  max-width:510px;margin:26px auto 0;text-align:center;
+  font-size:14.5px;font-weight:300;line-height:2.05;color:var(--ink-2);
+}
+.start-lede span{display:block}
+.facts{
+  display:grid;grid-template-columns:1fr 1fr 1fr;margin:34px auto 0;max-width:430px;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+}
+.fact{padding:14px 6px;text-align:center;position:relative}
+.fact + .fact::before{content:"";position:absolute;left:0;top:16px;bottom:16px;width:1px;background:var(--line-2)}
+.fact b{display:block;font-family:var(--serif);font-weight:700;font-size:22px;color:var(--ink);line-height:1.3}
+.fact span{display:block;font-size:11.5px;color:var(--cloud);letter-spacing:.1em;margin-top:3px}
+.start-cta{margin-top:36px;text-align:center}
+.btn-ink{
+  appearance:none;cursor:pointer;font-family:var(--serif);font-weight:700;
+  background:var(--ink);color:#F7F2F5;border:1px solid var(--ink);border-radius:2px;
+  font-size:15.5px;letter-spacing:.22em;text-indent:.22em;
+  padding:16px 44px;box-shadow:0 10px 24px -14px rgba(43,32,51,.7);
+  transition:transform .16s ease,background .25s ease,box-shadow .25s ease,color .25s ease;
+}
+.btn-ink:hover{background:#382643;box-shadow:0 14px 30px -14px rgba(43,32,51,.8)}
+.btn-ink:active{transform:translateY(1px) scale(.985)}
+.btn-ink:disabled{opacity:.4;cursor:not-allowed}
+.start-hint{margin-top:16px;text-align:center;font-size:12px;color:var(--ink-3);font-weight:300}
+.start-foot{margin-top:44px;text-align:center;font-size:11.5px;color:var(--cloud);letter-spacing:.08em}
+
+/* ===== 答题页 ===== */
+.quiz-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px}
+.q-no{font-family:var(--serif);font-size:13px;letter-spacing:.18em;color:var(--gold);font-weight:700}
+.q-no b{font-size:16px;color:var(--gold)}
+.q-count{font-family:var(--serif);font-size:12.5px;color:var(--ink-3);letter-spacing:.1em}
+.meter{height:2px;background:var(--line);position:relative;overflow:visible}
+.meter-fill{position:absolute;left:0;top:0;height:2px;width:0;background:var(--ink);transition:width .45s cubic-bezier(.2,.8,.2,1)}
+.meter-dot{position:absolute;top:-2px;width:6px;height:6px;border-radius:50%;background:var(--gold);left:0;transition:left .45s cubic-bezier(.2,.8,.2,1)}
+.quiz-q{
+  font-family:var(--serif);font-weight:700;font-size:clamp(20px,4.5vw,26px);
+  line-height:1.6;color:var(--ink);margin:30px 0 8px;min-height:2.6em;
+}
+.opts{margin-top:10px;border-top:1px solid var(--line-2);min-height:274px}
+.opt{
+  position:relative;display:flex;align-items:flex-start;gap:14px;width:100%;
+  text-align:left;background:transparent;border:none;border-bottom:1px solid var(--line-2);
+  padding:17px 12px 17px 14px;cursor:pointer;font-family:var(--sans);
+  font-size:15px;font-weight:400;line-height:1.7;color:#52405F;
+  transition:background .22s ease,color .2s ease,transform .18s ease;
+  overflow:hidden;-webkit-tap-highlight-color:transparent;
+}
+.opt:hover{background:rgba(163,86,122,.035);color:var(--ink)}
+.opt:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+.opt .key{
+  flex:none;width:22px;font-family:var(--serif);font-size:14px;color:var(--cloud);
+  line-height:1.75;text-align:center;transition:color .2s ease
+}
+.opt .txt{flex:1;min-width:0}
+.opt:hover .key{color:var(--gold-soft)}
+.opt.is-on{background:rgba(163,86,122,.13);color:var(--ink);font-weight:500;transform:scale(.992)}
+.opt.is-on .key{color:var(--gold);font-weight:700}
+.opt.is-on::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--jade)}
+.ripple{
+  position:absolute;border-radius:50%;background:rgba(163,86,122,.20);
+  transform:scale(0);pointer-events:none;animation:rip .6s cubic-bezier(.2,.7,.3,1) forwards;
+}
+@keyframes rip{to{transform:scale(2.4);opacity:0}}
+.quiz-foot{display:flex;align-items:center;justify-content:space-between;margin-top:22px;gap:16px}
+.link{
+  appearance:none;background:none;border:none;cursor:pointer;font-family:var(--sans);
+  font-size:13px;color:var(--ink-3);padding:6px 0;transition:color .2s ease;letter-spacing:.04em
+}
+.link:hover{color:var(--gold)}
+.link:disabled{opacity:.35;cursor:not-allowed}
+.foot-hint{font-size:11.5px;color:var(--cloud);letter-spacing:.08em}
+.result-cta{margin-top:26px;text-align:center}
+.result-cta.is-hidden{display:none}
+
+/* ===== 结果页 ===== */
+.res-hero{
+  border:1px solid var(--line);border-top:2px solid var(--ink);
+  background:linear-gradient(180deg,rgba(255,255,255,.62),rgba(252,248,251,.34));
+  padding:34px 30px 30px;text-align:center;position:relative;
+}
+.res-hero .seal{position:absolute;left:26px;top:26px}
+.res-eyebrow{font-size:11px;letter-spacing:.34em;color:#A3567A;text-indent:.34em}
+.res-name{
+  font-family:var(--serif);font-weight:900;font-size:clamp(34px,8.4vw,48px);
+  line-height:1.2;color:var(--ink);margin-top:14px;letter-spacing:.02em;
+}
+.res-tag{
+  display:inline-block;margin-top:10px;font-family:var(--serif);font-size:13.5px;
+  color:#A3567A;letter-spacing:.16em;text-indent:.16em;
+  padding:5px 12px;border-top:1px solid var(--line-2);border-bottom:1px solid var(--line-2)
+}
+.res-slogan{
+  margin-top:22px;padding-left:16px;border-left:2px solid rgba(163,86,122,.32);
+  font-family:var(--serif);font-weight:500;font-size:clamp(15px,3.6vw,18px);
+  line-height:1.8;color:var(--ink-2);text-align:left;
+}
+.res-block{margin-top:34px}
+.res-h{
+  display:flex;align-items:center;gap:10px;
+  font-family:var(--serif);font-weight:700;font-size:15px;color:var(--ink);letter-spacing:.04em
+}
+.res-h::before{content:"";width:3px;height:15px;background:#A3567A;flex:none}
+.res-p{margin-top:12px;font-size:14.5px;font-weight:300;line-height:2.02;color:var(--ink-2);text-align:justify}
+.chart{margin-top:38px;padding-top:26px;border-top:1px solid var(--line)}
+.chart-h{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--ink);letter-spacing:.04em}
+.chart-note{margin-top:6px;font-size:11.5px;color:var(--cloud)}
+.axis{display:grid;grid-template-columns:58px 1fr 58px;align-items:center;gap:12px;margin-top:18px}
+.axis-l{font-size:12.5px;text-align:right;color:var(--ink-3);transition:color .3s ease}
+.axis-r{font-size:12.5px;text-align:left;color:var(--ink-3);transition:color .3s ease}
+.axis-track{position:relative;height:3px;background:rgba(43,32,51,.10);border-radius:2px}
+.axis-mid{position:absolute;left:50%;top:-4px;width:1px;height:11px;background:rgba(43,32,51,.16)}
+.axis-fill{position:absolute;top:0;height:3px;width:0;border-radius:2px;background:var(--jade);transition:width .9s cubic-bezier(.2,.8,.2,1),left .9s cubic-bezier(.2,.8,.2,1)}
+.axis-dot{position:absolute;top:-3px;width:9px;height:9px;border-radius:50%;background:var(--jade);left:50%;transition:left .9s cubic-bezier(.2,.8,.2,1);box-shadow:0 0 0 3px rgba(163,86,122,.12)}
+.res-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:38px}
+.res-actions #btn-save{grid-column:1 / -1}
+.btn-fill{
+  appearance:none;cursor:pointer;font-family:var(--serif);font-weight:700;
+  background:var(--ink);color:#F7F2F5;border:1px solid var(--ink);border-radius:2px;
+  font-size:14.5px;letter-spacing:.14em;text-indent:.14em;padding:14px 10px;
+  transition:background .25s ease,transform .16s ease,box-shadow .2s ease;
+  box-shadow:0 10px 22px -16px rgba(43,32,51,.9)
+}
+.btn-fill:hover{background:#382643}
+.btn-fill:active{transform:translateY(1px) scale(.99)}
+.btn-line{
+  appearance:none;cursor:pointer;font-family:var(--serif);font-weight:700;border-radius:2px;
+  background:transparent;color:#A3567A;border:1px solid rgba(163,86,122,.32);
+  font-size:14.5px;letter-spacing:.14em;text-indent:.14em;padding:14px 10px;
+  transition:background .25s ease,border-color .25s ease,color .25s ease
+}
+.btn-line:hover{background:rgba(139,124,151,.08);border-color:var(--gold)}
+.res-foot{display:flex;justify-content:space-between;align-items:center;margin-top:22px;gap:16px}
+.res-note{margin-top:20px;font-size:11.5px;color:var(--cloud);line-height:1.7}
+
+/* ===== 结果卡弹层 ===== */
+.save-sheet{position:fixed;inset:0;z-index:40;display:none;place-items:center;
+  background:rgba(30,22,38,.74);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);padding:20px}
+.save-sheet.is-on{display:grid}
+.save-card{display:flex;flex-direction:column;gap:14px;align-items:center;max-width:100%}
+.save-tip{font-size:12.5px;color:#EDE4EC;letter-spacing:.08em;margin:0}
+.save-img{display:block;max-width:min(92vw,380px);max-height:70vh;width:auto;
+  border:1px solid rgba(247,242,245,.28);box-shadow:0 26px 60px -26px rgba(0,0,0,.7)}
+.save-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:min(92vw,380px)}
+.save-btns .btn-line{background:rgba(247,242,245,.08);border-color:rgba(247,242,245,.34);color:#F1E9F0}
+
+/* ===== 提示条 ===== */
+.toast{
+  position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(14px);
+  background:var(--ink);color:#F7F2F5;font-size:13px;letter-spacing:.06em;
+  padding:11px 22px;border-radius:2px;opacity:0;pointer-events:none;
+  transition:opacity .28s ease,transform .28s ease;z-index:30
+}
+.toast.is-on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media (max-width:560px){
+  .stage{padding:22px 18px 40px}
+  .start-lede{font-size:14px;line-height:1.95}
+  .facts{max-width:none}
+  .res-hero{padding:30px 18px 26px}
+  .res-hero .seal{position:static;display:inline-flex;margin-bottom:14px}
+  .opt{font-size:14.5px;padding:16px 8px 16px 10px}
+  .axis{grid-template-columns:52px 1fr 52px;gap:9px}
+  .axis-l,.axis-r{font-size:12px}
+  .res-actions{grid-template-columns:1fr}
+  .mountains{height:180px}
+}
+@media (prefers-reduced-motion:reduce){
+  .cloud,.star,.view.is-active{animation:none}
+  .opt,.meter-fill,.meter-dot,.axis-fill,.axis-dot{transition:none}
+}
+</style>
+</head>
+<body>
+
+<!-- 装饰层 -->
+<div class="scene" aria-hidden="true">
+  <div class="grain"></div>
+  <div class="cloud cloud-a"></div>
+  <div class="cloud cloud-b"></div>
+  <span class="star"></span><span class="star"></span><span class="star"></span>
+  <span class="star"></span><span class="star"></span><span class="star"></span>
+  <div class="mountains">
+    <svg viewBox="0 0 1200 260" preserveAspectRatio="none">
+      <path d="M0 190 C120 130 180 150 260 118 C340 86 400 132 470 100 C540 68 600 118 660 92 C720 66 790 128 860 104 C930 80 1010 136 1080 112 C1130 96 1170 120 1200 108 L1200 260 L0 260 Z" fill="#2B2033" opacity=".055"/>
+      <path d="M0 224 C90 186 150 206 230 178 C310 150 360 194 440 170 C520 146 560 186 640 168 C720 150 780 196 860 176 C940 156 1000 200 1080 182 C1130 170 1170 186 1200 178 L1200 260 L0 260 Z" fill="#2B2033" opacity=".038"/>
+      <path d="M0 246 C140 224 240 238 340 226 C440 214 520 234 620 224 C720 214 820 236 920 228 C1020 220 1110 236 1200 230 L1200 260 L0 260 Z" fill="#A3567A" opacity=".05"/>
+    </svg>
+  </div>
+</div>
+
+<main class="stage">
+  <!-- ===== 首页 ===== -->
+  <section id="view-start" class="view is-active">
+    <div class="start-head"><span class="seal">魅</span></div>
+    <div class="start-title">
+      <span class="start-pre">测 一 测</span>
+      <span class="start-main">你自带哪种<br>人格魅力标签</span>
+    </div>
+    <p class="start-lede"><span>四十道题，电梯、饭桌、半夜的消息。</span><span>不用懂什么术语，凭第一反应选就行。</span><span>没有标准答案，也没有哪一种更好。</span></p>
+    <div class="facts">
+      <div class="fact"><b>40</b><span>道生活题</span></div>
+      <div class="fact"><b>4</b><span>分钟</span></div>
+      <div class="fact"><b>16</b><span>种标签</span></div>
+    </div>
+    <div class="start-cta">
+      <button class="btn-ink" id="btn-start">开始测试</button>
+    </div>
+    <p class="start-hint">想太久反而不准。选那个你下意识会做的。</p>
+    <!-- 这里可以换成你的铺子署名，比如：@某某的测试铺 · 测完可反复重来 -->
+    <p class="start-foot">测完可反复重来 · 结果只由你的选择决定</p>
+  </section>
+  <!-- ===== 答题页 ===== -->
+  <section id="view-quiz" class="view">
+    <div class="quiz-head">
+      <div class="q-no">第 <b id="q-idx">一</b> 问</div>
+      <div class="q-count" id="q-count">01 / 40</div>
+    </div>
+    <div class="meter"><div class="meter-fill" id="meter-fill"></div><div class="meter-dot" id="meter-dot"></div></div>
+    <h2 class="quiz-q" id="q-text"></h2>
+    <div class="opts" id="q-opts"></div>
+    <div class="quiz-foot">
+      <button class="link" id="btn-prev">← 上一题</button>
+      <span class="foot-hint" id="foot-hint">凭直觉，别权衡</span>
+    </div>
+    <div class="result-cta is-hidden" id="result-cta">
+      <button class="btn-ink" id="btn-submit">看看结果</button>
+    </div>
+  </section>
+  <!-- ===== 结果页 ===== -->
+  <section id="view-result" class="view">
+    <div class="res-hero">
+      <span class="seal">魅</span>
+      <div class="res-eyebrow">你的人格魅力标签</div>
+      <h2 class="res-name" id="r-name"></h2>
+      <div><span class="res-tag" id="r-tag"></span></div>
+      <blockquote class="res-slogan" id="r-slogan"></blockquote>
+    </div>
+
+    <div class="res-block">
+      <div class="res-h">为什么是你</div>
+      <p class="res-p" id="r-why"></p>
+    </div>
+
+    <div class="res-block">
+      <div class="res-h">隐藏特质 · 小彩蛋</div>
+      <p class="res-p" id="r-secret"></p>
+    </div>
+
+    <div class="chart">
+      <div class="chart-h">你的六维气质</div>
+      <p class="chart-note">越靠哪一头，那一边的倾向就越明显</p>
+      <div id="r-chart"></div>
+    </div>
+
+    <div class="res-actions">
+      <button class="btn-fill" id="btn-save">保存图片</button>
+      <button class="btn-line" id="btn-copy">复制这段话</button>
+      <button class="btn-line" id="btn-share">发给朋友</button>
+    </div>
+
+  <div class="save-sheet" id="save-sheet">
+    <div class="save-card">
+      <p class="save-tip">长按图片保存到相册 · 电脑端点「下载图片」</p>
+      <img class="save-img" id="save-img" alt="人格魅力结果卡">
+      <div class="save-btns">
+        <button class="btn-line" id="btn-download">下载图片</button>
+        <button class="btn-line" id="btn-close-save">收起</button>
+      </div>
+    </div>
+  </div>
+
+    <div class="res-foot">
+      <button class="link" id="btn-retest">← 再测一次</button>
+      <span class="foot-hint">换个人来测，结果会完全不同</span>
+    </div>
+
+    <p class="res-note">这只关于你下意识的习惯，没有高下之分，每种标签都有自己的好看之处。</p>
+  </section>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+/* ================= 题库与身份数据 =================
+   八个隐藏维度（分数可为负）：
+   f 锋芒 / r 入世 / x 秩序 / g 共情 / d 独行 / q 求道 / j 精微 / y 远虑
+   每个选项的 p 字段：维度字母 + 正负分值，例如 "f+3 d+1"
+   ================================================= */
+const DATA = {"axes": [{"k": "w", "l": "暖场", "r": "冷感"}, {"k": "e", "l": "外放", "r": "内收"}, {"k": "s", "l": "松弛", "r": "紧绷"}, {"k": "t", "l": "婉转", "r": "直给"}, {"k": "l", "l": "主心骨", "r": "随大流"}, {"k": "i", "l": "敏感", "r": "钝感"}, {"k": "h", "l": "会玩", "r": "稳当"}, {"k": "c", "l": "长情", "r": "多面"}], "questions": [{"t": "电梯门要关了，有人小跑过来。你按不按开门键？", "o": [{"t": "按着，顺便问一句几楼", "p": "w+3 t+1"}, {"t": "按住，不出声", "p": "w+2 e-2"}, {"t": "手已经收回口袋", "p": "w-3 e-1"}, {"t": "离得近就按，远了就算了", "p": "s+2 w+1"}]}, {"t": "一桌人吃饭，菜刚上齐，谁先动筷？", "o": [{"t": "招呼一声“先吃先吃”", "p": "e+3 l+2"}, {"t": "等别人夹了，自己再动", "p": "t+3 l-2"}, {"t": "先夹一筷子尝尝咸淡", "p": "s+3 h+2"}, {"t": "盯着最想吃的那个，等时机", "p": "l+1 i+1"}]}, {"t": "朋友半夜发来一大段情绪，你会", "o": [{"t": "先回一句“我在”，再慢慢聊", "p": "w+3 i+1"}, {"t": "一句一句问细节，帮他把事理清", "p": "i+3 l+1"}, {"t": "直接问打算怎么办", "p": "t-3 l+2"}, {"t": "等他自己缓一缓，明天再问", "p": "w-2 s+2"}]}, {"t": "群里有人发了个冷笑话，没人接，你会", "o": [{"t": "立刻接一句更冷的", "p": "h+3 e+2"}, {"t": "发个表情包垫一下", "p": "e+2 w+1"}, {"t": "笑一下，但不说话", "p": "h+2 e-2"}, {"t": "根本没看到", "p": "i-2 s+1"}]}, {"t": "有人当着所有人的面否掉你的方案", "o": [{"t": "一条条拆开答，场面冷也认", "p": "t-3 l+3"}, {"t": "不争这一句，会后补数据再发", "p": "t+1 l+1 s+2"}, {"t": "先接一句缓和气氛，再补内容", "p": "w+2 t+2"}, {"t": "心里记下，面上一句不提", "p": "e-3 s+2"}]}, {"t": "和不太熟的人一起等电梯，安静的三十秒", "o": [{"t": "主动找个话题", "p": "e+3 w+2"}, {"t": "看手机，假装在看", "p": "e-2 t+2"}, {"t": "说一句“今天真热”就停", "p": "t+2 e+1"}, {"t": "舒服地不说话", "p": "s+3 e-2"}]}, {"t": "出门前你更可能在忙什么", "o": [{"t": "检查有没有忘带东西", "p": "i+2 c+2 s-2"}, {"t": "换第三套衣服", "p": "h+2 c-1 e+1"}, {"t": "已经在回消息了", "p": "l+2 e+1"}, {"t": "什么都不忙，到门口才想起钥匙", "p": "s+3 c-2"}]}, {"t": "你手机相片里最多的是", "o": [{"t": "风景和光", "p": "i+2 h+1"}, {"t": "和朋友的脸", "p": "w+3 e+1"}, {"t": "截图和资料", "p": "c+2 i+2 t+1"}, {"t": "一堆重复的，舍不得删", "p": "c+3 s-1"}]}, {"t": "别人夸你好看，你的第一反应", "o": [{"t": "笑着接住，反夸回去", "p": "e+3 w+1"}, {"t": "说“哪有”，赶紧换话题", "p": "e-2 t+2"}, {"t": "说谢谢，然后真的记了一天", "p": "w+2 c+2"}, {"t": "心里想，他说这话想干嘛", "p": "i+3 s+1"}]}, {"t": "和刚认识的人吃饭，谁点菜", "o": [{"t": "我来，问一圈忌口", "p": "l+3 w+2"}, {"t": "你来，我什么都吃", "p": "l-3 s+2"}, {"t": "点两个我熟的，剩下交给你", "p": "l+1 t+1"}, {"t": "看很久菜单，最后说“随便”", "p": "s+1 i+1 c-1"}]}, {"t": "部门要选一个人上台讲，你", "o": [{"t": "举手，讲得还挺享受", "p": "e+3 l+2"}, {"t": "被点到名就上，讲完就下", "p": "s+1 t+1"}, {"t": "私下把稿子练到能背", "p": "c+3 i+2 e-1"}, {"t": "想尽办法推给别人", "p": "e-3 l-2"}]}, {"t": "有人在你面前哭", "o": [{"t": "递纸巾，陪着，等他哭完", "p": "w+3 s+1"}, {"t": "问他要不要说说", "p": "i+2 w+2"}, {"t": "有点手足无措，先找点事做", "p": "t+1 s-2"}, {"t": "不太会安慰，但会一直在", "p": "w+1 e-2 c+2"}]}, {"t": "会议开到第四十分钟，跑题了", "o": [{"t": "把话题拉回来", "p": "l+3 t+1"}, {"t": "顺着聊两句，再拉回来", "p": "w+2 l+1"}, {"t": "悄悄看时间，等着", "p": "i+1 e-2"}, {"t": "已经神游到别的项目上", "p": "s+2 i-1"}]}, {"t": "你发出去的消息，对方三小时没回", "o": [{"t": "不再想这件事", "p": "s+3 i-2"}, {"t": "想是不是自己说错了", "p": "s-3 i+2"}, {"t": "直接打个电话问", "p": "t-3 l+2"}, {"t": "补一句“不急，看到回我”", "p": "w+2 t+1"}]}, {"t": "走夜路，你会", "o": [{"t": "耳机摘下，注意身后动静", "p": "i+2 s-1"}, {"t": "走快点，脑子里想别的事", "p": "s+1 i-1"}, {"t": "给朋友发个定位", "p": "w+1 i+1 t+1"}, {"t": "觉得夜路挺好，慢慢走", "p": "s+3 h+2"}]}, {"t": "一屋子陌生人，你常站在", "o": [{"t": "中间，谁都能聊两句", "p": "e+3 w+2"}, {"t": "靠门，随时能走", "p": "e-2 i+2 s+1"}, {"t": "一个人旁边，聊上了就聊很久", "p": "e-1 w+2 c+1"}, {"t": "角落，观察谁和谁熟", "p": "i+3 e-2"}]}, {"t": "朋友让你改简历，你手上正忙", "o": [{"t": "说“等我半小时，一定看”", "p": "w+2 t+1 c+1"}, {"t": "直接问“急吗”，急就先看", "p": "t-2 l+1"}, {"t": "说“我这几天有点满”，如实说", "p": "t+2 s+1"}, {"t": "先答应，然后拖到半夜", "p": "w+1 s-1 c-1"}]}, {"t": "你更受不了哪种人", "o": [{"t": "说话不算数的", "p": "c+3 t+1"}, {"t": "永远在抱怨的", "p": "s-2 i+1"}, {"t": "只顾自己爽的", "p": "w-2 t-1"}, {"t": "什么都要管的", "p": "l-3 s+2"}]}, {"t": "突然多出半天假，你会", "o": [{"t": "约人，马上出门", "p": "e+3 w+1"}, {"t": "在家躺着，一件事都不做", "p": "s+3 e-2"}, {"t": "把攒的事一口气办完", "p": "c+3 l+2"}, {"t": "随便走走，看遇到什么", "p": "h+3 s+2"}]}, {"t": "有人在饭桌上拿你开玩笑", "o": [{"t": "跟着一起笑，还添一句", "p": "h+3 e+2"}, {"t": "笑着不接，等他讲完", "p": "t+2 i+1"}, {"t": "直接说“这个我不太喜欢”", "p": "t-3 l+2"}, {"t": "笑一下，心里扣分", "p": "e-2 i+2"}]}, {"t": "你答应别人的事，一般", "o": [{"t": "提前做完，还顺手多做一点", "p": "c+3 l+2"}, {"t": "按时做完，不多不少", "p": "c+2 t+1"}, {"t": "最后一刻做完，但一定做完", "p": "s+1 c+1"}, {"t": "中途有新情况，会提前说", "p": "t+2 i+1"}]}, {"t": "房间乱不乱，你", "o": [{"t": "看得见每一处乱", "p": "i+2 s-2 c+1"}, {"t": "乱着，但我知道东西在哪", "p": "s+3 c-1"}, {"t": "忍不了，隔几天收一次", "p": "c+2 s-1"}, {"t": "请人来收，我不管", "p": "e+1 s+1 l-1"}]}, {"t": "第一次见面的人，你多久能看出他什么脾气", "o": [{"t": "聊十分钟就有数", "p": "i+3 l+1"}, {"t": "要处一段时间才知道", "p": "i-1 c+2"}, {"t": "基本靠直觉，不太准但很快", "p": "i+2 h+1"}, {"t": "我不太看人，看事", "p": "i-3 t+1"}]}, {"t": "你更常被夸", "o": [{"t": "靠谱", "p": "c+3 l+1"}, {"t": "好相处", "p": "w+3 t+2"}, {"t": "有意思", "p": "h+3 e+1"}, {"t": "想得清楚", "p": "i+3 l+1"}]}, {"t": "项目出了锅，第一件事", "o": [{"t": "先处理人，别再互相甩锅", "p": "w+2 l+2 t+1"}, {"t": "先找原因，谁的问题后面说", "p": "i+3 t+1"}, {"t": "先跟外面解释，稳住局面", "p": "t+1 l+2"}, {"t": "先自己把能补的补上", "p": "c+2 s+1"}]}, {"t": "你朋友里，你更像", "o": [{"t": "那个组织局的人", "p": "l+3 e+2"}, {"t": "那个谁都能聊两句的人", "p": "w+3 e+1"}, {"t": "那个很久不联系，一联系就很熟的人", "p": "c+3 e-2"}, {"t": "那个大家有事才想起的人", "p": "i+2 l+1 e-1"}]}, {"t": "深夜刷到一条很戳的视频", "o": [{"t": "立刻转发给三个人", "p": "e+3 w+2"}, {"t": "收藏，不发", "p": "e-2 c+2"}, {"t": "看完想很久，写两句自己", "p": "i+3 h+1"}, {"t": "看完就睡，第二天忘了", "p": "s+3 i-2"}]}, {"t": "和人争执到一半，发现自己错了", "o": [{"t": "当场认，是我记错了", "p": "t-2 l+1"}, {"t": "先绕一下，再慢慢说自己错了", "p": "t+2 w+1"}, {"t": "私下找个机会再说", "p": "t+1 e-1"}, {"t": "心里认了，嘴上说“行行行”", "p": "s+1 i+1 t+1"}]}, {"t": "别人给你提了个明显不靠谱的建议", "o": [{"t": "直接说“这个不行”", "p": "t-3 l+1"}, {"t": "先问一句“你担心的是哪块”", "p": "w+2 i+2"}, {"t": "说“我再想想”，然后不用", "p": "t+2 s+1"}, {"t": "听着，回头按自己的做", "p": "i+1 e-1 c+1"}]}, {"t": "你的一天里，最多的时间花在", "o": [{"t": "和人说话", "p": "w+3 e+2"}, {"t": "一个人做事", "p": "e-3 i+2 c+1"}, {"t": "想事情", "p": "i+3 h+1"}, {"t": "到处跑，看新鲜", "p": "h+3 e+2 s+1"}]}, {"t": "电梯里遇到只见过一面的同事", "o": [{"t": "主动打招呼，还能聊两句", "p": "e+3 w+1"}, {"t": "点头，笑一下", "p": "t+2 w+1"}, {"t": "假装在看手机", "p": "e-3 s+1"}, {"t": "等他先开口", "p": "e-1 i+1"}]}, {"t": "答应借给别人的东西，忘了带", "o": [{"t": "马上说，约下次", "p": "t-1 c+1"}, {"t": "找个别的先顶上", "p": "w+2 s+1"}, {"t": "拖到对方提起来", "p": "s+2 t-1"}, {"t": "先道歉，回去就跑一趟送过去", "p": "c+3 w+2"}]}, {"t": "有人一直问你“我是不是很胖”", "o": [{"t": "说“你哪有胖”，再夸一句别处", "p": "t+3 w+2"}, {"t": "说“你健康就行”", "p": "t+2 i+1"}, {"t": "反问“你自己怎么看”", "p": "i+3 t-1"}, {"t": "说“有点”，然后说怎么改", "p": "t-3 l+2"}]}, {"t": "你更愿意做", "o": [{"t": "把一件事做十年", "p": "c+3 l+1"}, {"t": "每年换一个新方向", "p": "h+2 c-3 s+2"}, {"t": "和人一起磨一件事", "p": "w+2 c+2 e+1"}, {"t": "收钱办事，办完就散", "p": "t+1 e-1 c-1"}]}, {"t": "你生气的时候", "o": [{"t": "当场说，说完就好", "p": "t-3 e+2"}, {"t": "不说话，冷三天", "p": "e-2 s-1 c+2"}, {"t": "自己消化，第二天照常", "p": "s+2 i+2 e-2"}, {"t": "有点阴阳，但心里清楚", "p": "i+1 h+2 t-1"}]}, {"t": "有人在背后说了你一句", "o": [{"t": "直接找他对", "p": "t-3 l+3"}, {"t": "先弄清楚有几个人信了", "p": "i+3 l+1"}, {"t": "不理，该干嘛干嘛", "p": "s+3 c+1"}, {"t": "会想很久，但不外露", "p": "i+2 e-3 s-2"}]}, {"t": "你更舒服的周末是", "o": [{"t": "一整天没人找", "p": "e-3 s+3"}, {"t": "约一两个人，聊到深夜", "p": "w+3 c+1"}, {"t": "一个人出门，逛陌生的地方", "p": "h+2 s+2 e-2"}, {"t": "把手上的事推进一步", "p": "l+3 c+2"}]}, {"t": "你觉得自己最不像哪种说法", "o": [{"t": "“他脾气真好”", "p": "t-2 l+1"}, {"t": "“他没什么主见”", "p": "l+3 i+1"}, {"t": "“他挺有意思”", "p": "h-2 t+1"}, {"t": "“他不太会拒绝人”", "p": "t+1 w+1"}]}, {"t": "你更信", "o": [{"t": "感觉", "p": "i+1 h+2 s+2"}, {"t": "数据", "p": "i+3 t+1 c+1"}, {"t": "人", "p": "w+3 i+1"}, {"t": "时间", "p": "c+3 s+1"}]}, {"t": "如果别人用一句话形容你，你希望是", "o": [{"t": "跟他在一块很舒服", "p": "w+3 t+2"}, {"t": "他一说话我就想听", "p": "e+2 l+2 h+1"}, {"t": "他那脑子是怎么长的", "p": "i+3 l+1"}, {"t": "他一直都在", "p": "c+3 w+2"}]}], "identities": [{"id": "dinghaizhen", "name": "人间定海针", "tag": "稳如老树", "slogan": "天塌下来，先吃饭", "why": "你身上有种不慌的体质。别人乱的时候你不是没情绪，是你知道乱完也没用，先把眼前的事做完。一桌人慌了，最后都会先看你的表情。", "secret": "你其实也会在深夜翻来覆去，只是第二天照样把咖啡泡好。朋友说你是主心骨，你心里想的是“我也想有人靠一下”。", "sig": [0.3, -0.6, 1.0, -0.3, 0.5, -0.2, -0.8, 0.9]}, {"id": "pobing", "name": "破冰型选手", "tag": "三句话就熟", "slogan": "我先开口，尴尬就没了", "why": "你进一个屋子，气氛会自己开始转。不是你会说漂亮话，是你不怕当第一个开口的人。别人还在想怎么打招呼，你已经问完他老家哪的了。", "secret": "你热闹完会累，回家要躺半小时才回魂。你的社交电池不是无限的，只是充电很快。", "sig": [0.6, 1.0, 0.3, 0.3, 0.7, 0.3, 0.8, -0.7]}, {"id": "xiaozhang", "name": "冷面笑匠", "tag": "面无表情地好笑", "slogan": "我不笑，你先笑", "why": "你不太外放，但一句话能把整桌人放倒。你的好笑不是表演，是观察太准，随口一说就戳中。你自己往往最后一个笑。", "secret": "你手机里存了一整个相册的表情包，还按场景分了文件夹。你其实很怕冷场，所以随时备着三句话。", "sig": [-0.6, -0.5, 0.7, -0.5, -0.2, 0.7, 1.0, 0.2]}, {"id": "hengwenqi", "name": "情绪恒温器", "tag": "谁都想靠一下", "slogan": "别急，慢慢说", "why": "你身上温度稳定。别人炸的时候你还在，别人哭的时候你不躲。你不一定给得出办法，但你坐在那儿，事情就没那么严重了。", "secret": "你听完所有人的事，自己的事就往后放。有人问你怎么了，你通常说“没事”，然后真的去睡了。", "sig": [1.0, -0.1, 0.8, 0.4, -0.5, 0.4, -0.9, 0.6]}, {"id": "yizhen", "name": "一针见血型", "tag": "话不多但准", "slogan": "这句可能不好听，但它是对的", "why": "你不爱铺垫，也不太会绕。别人绕三圈的问题，你一句就说到根上。有人被你噎过，但事后多半会回来找你。", "secret": "你说完狠话会自己复盘，刚才是不是太重了。你嘴上说不在乎，其实记得每个人当时的表情。", "sig": [-0.4, 0.6, 0.0, -1.0, 0.6, 1.0, 0.4, -0.3]}, {"id": "wenrousha", "name": "温柔杀", "tag": "说话像哄小孩", "slogan": "我凶起来，是先笑一下", "why": "你有一种让人放下戒备的本事。不是讨好，是你真的在认真听，而且记得上次他说过什么。别人愿意跟你说不该说的事。", "secret": "你底线比看起来硬得多。你真生气的时候不吵，只是从此不再主动。", "sig": [1.0, -0.1, 0.4, 1.0, 0.7, 0.8, 0.4, 0.0]}, {"id": "qingtingzhe", "name": "天选倾听者", "tag": "什么都能说", "slogan": "你说，我不打断", "why": "你是那种别人讲着讲着，就把没跟任何人说过的事说出来的人。你很少抢话，也很少评价，你的“嗯”是有分量的。", "secret": "你听完太多秘密，偶尔会觉得沉。你自己那点事，一般只在凌晨两点跟一个人说一次。", "sig": [0.8, -0.9, 0.6, 0.6, -0.9, 1.0, -0.6, 0.4]}, {"id": "changkong", "name": "场控大师", "tag": "场面归我", "slogan": "跟着我走，不会乱", "why": "一屋子人乱成一团时，你会自然地把事接过来。你不一定嗓门最大，但你说一句，大家就开始动。", "secret": "你也会在散场后一个人坐着缓一会。所有人都以为你不会累，你也没解释。", "sig": [0.3, 0.9, -0.4, -0.3, 1.0, -0.5, 0.5, 0.1]}, {"id": "songchi", "name": "松弛感本体", "tag": "什么都不急", "slogan": "晚点也没关系", "why": "你身上有股怎样都行的松弛。不是不上心，是你不太容易被时间推着跑。跟你待一会，别人也会慢下来。", "secret": "你的松弛是练出来的。你也有过一整天被一个消息吊着的时候，后来学会了先把手机放下。", "sig": [0.1, 0.2, 0.9, 0.3, -0.6, -0.9, 0.5, -0.9]}, {"id": "fancha", "name": "反差怪", "tag": "看着冷，其实软", "slogan": "我不说话，不代表我不在", "why": "你第一眼给人感觉有点冷，熟了以后判若两人。你不太会主动热络，但记得每个人的口味、忌讳和上次的委屈。", "secret": "你的关心都藏在动作里，加个菜、递个水、把话题岔开。你从不说“我担心你”，你只是刚好出现了。", "sig": [-0.4, -0.9, 0.3, 0.5, -0.1, 0.6, 0.7, 0.3]}, {"id": "xijie", "name": "细节型暖手", "tag": "你忘了，我记得", "slogan": "小事我记着，大事你说了算", "why": "你是那种会把别人的小事当真的人。谁不吃香菜、谁那天要面试、谁上次说牙疼，你都不用刻意记。", "secret": "你替别人操心的时候很自然，轮到自己就张不开嘴。别人问你要什么，你说“都行”，其实心里有一个答案。", "sig": [0.2, -0.8, -1.0, 0.4, -0.3, 0.9, -1.0, 0.5]}, {"id": "zhexue", "name": "野生哲学家", "tag": "想得比说的多", "slogan": "这事有意思，先别急着下结论", "why": "你脑子里总在转一些问题，别人聊八卦，你在想背后的原因。你不一定说出口，但你看事情的角度常常让人停一下。", "secret": "你的道理一大堆，轮到自己就全失效。你也知道，所以更愿意听别人说。", "sig": [-0.2, -0.8, 0.4, -0.4, 0.4, 1.0, 0.2, -0.6]}, {"id": "qifen", "name": "气氛组组长", "tag": "我来了就不闷", "slogan": "冷场我来，你们随意", "why": "你在的地方不太会闷。你会接梗、会起头、会在没人说话时随口丢一句，让空气重新流动起来。", "secret": "你笑点低，泪点也低。别人以为你只会搞笑，其实你记得每个人情绪最低的那一次。", "sig": [0.5, 1.0, 0.9, 0.2, -0.2, -0.8, 1.0, -0.8]}, {"id": "manre", "name": "慢热宝藏", "tag": "熟了才知道", "slogan": "前三次我话少，第四次你会吓一跳", "why": "你第一印象偏安静，看着不太好接近。但你一旦把人放进来，就掏得比别人都彻底。", "secret": "你的门槛不高，只是需要时间。你手机里最常聊的那几个人，基本都是认识五年以上的。", "sig": [0.5, -1.0, -0.3, 0.5, -0.5, 0.0, 0.6, 0.5]}, {"id": "wenzhunhen", "name": "稳准狠型", "tag": "不废话，直接办", "slogan": "说结论，我们省时间", "why": "你不太耐烦绕弯子，也不爱模糊。你能在别人还在讨论的时候把事情定了，而且事后很少回头看。", "secret": "你的干脆里有一部分是怕麻烦，不想把一件事反反复复说上十遍。你其实也会犹豫，只是习惯先动手。", "sig": [-0.9, 0.1, -0.8, -0.9, 0.8, 0.2, -0.7, 0.9]}, {"id": "changqing", "name": "长情型选手", "tag": "认定了就不换", "slogan": "我慢，但我不走", "why": "你不太追新鲜，喜欢一样东西能喜欢很多年。你不常表达，但你说过的事基本都算数。", "secret": "你的旧物很多，旧聊天记录也舍不得删。你嘴上说都过去了，其实每年都会想起来几次。", "sig": [0.9, -0.2, 0.0, 0.4, 0.3, 0.0, -0.6, 1.0]}], "chartAxes": ["w", "e", "s", "t", "h", "i"]};
+/* ================= 数据结束 ================= */
+</script>
+<script>
+(function () {
+  "use strict";
+  /* 【上线前改这一行】填上你自己的网址（例如 https://xxx.vercel.app），
+     复制出来的分享文案就会自动带上这个链接；留空则只复制文字，不带链接 */
+  var SHARE_URL = "";
+  /* 【改这里】填上你的小红书昵称或店铺名：分享文案会带一句「小红书搜：xxx」，
+     把看到的人导回你的商品页；填了才有，留空则不出现这一行 */
+  var SHOP_NAME = "";
+  var Q = DATA.questions, IDS = DATA.identities, AXES = DATA.axes;
+  var AX = {}; AXES.forEach(function (a) { AX[a.k] = a; });
+  var KEYS = ["甲", "乙", "丙", "丁"];
+  var N = Q.length;
+
+  /* ---------- 选项顺序：固定种子打乱，每次打开都一样，避免答案总在同一个位置 ---------- */
+  function hash32(x) {
+    x = Math.imul(x ^ (x >>> 16), 0x45d9f3b);
+    x = Math.imul(x ^ (x >>> 16), 0x45d9f3b);
+    x ^= x >>> 16;
+    return (x >>> 0) / 4294967296;
+  }
+  var orders = Q.map(function (q, qi) {
+    var arr = q.o.map(function (_, i) { return i; });
+    for (var i = arr.length - 1; i > 0; i--) {
+      var h = (qi * 73856093) ^ (i * 19349663) ^ 20260117;
+      var j = Math.floor(hash32(h) * (i + 1));
+      var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+    }
+    return arr;
+  });
+
+  /* ---------- 解析分值 ---------- */
+  function parseP(str) {
+    var d = {};
+    (str || "").split(" ").forEach(function (tk) {
+      if (!tk) return;
+      d[tk.charAt(0)] = parseInt(tk.slice(1), 10) || 0;
+    });
+    return d;
+  }
+  Q.forEach(function (q) { q.o.forEach(function (o) { o._d = parseP(o.p); }); });
+
+  /* ---------- 每题平均值：作为“平均答题者”的零点，避免某些维度天然偏高 ---------- */
+  var expect = {}, maxPos = {}, maxNeg = {};
+  AXES.forEach(function (a) { expect[a.k] = 0; maxPos[a.k] = 0; maxNeg[a.k] = 0; });
+  Q.forEach(function (q) {
+    AXES.forEach(function (a) {
+      var sum = 0, hi = -Infinity, lo = Infinity;
+      q.o.forEach(function (o) {
+        var v = o._d[a.k] || 0;
+        sum += v;
+        if (v > hi) hi = v;
+        if (v < lo) lo = v;
+      });
+      expect[a.k] += sum / q.o.length;
+      maxPos[a.k] += hi;
+      maxNeg[a.k] += lo;
+    });
+  });
+  AXES.forEach(function (a) {
+    maxPos[a.k] = Math.max(0.6, maxPos[a.k] - expect[a.k]);
+    maxNeg[a.k] = Math.max(0.6, expect[a.k] - maxNeg[a.k]);
+  });
+
+  /* ---------- 状态 ---------- */
+  var answers = new Array(N).fill(-1);
+  var cur = 0;
+  var locked = false;
+
+  /* ---------- 元素 ---------- */
+  var views = {
+    start: document.getElementById("view-start"),
+    quiz: document.getElementById("view-quiz"),
+    result: document.getElementById("view-result")
+  };
+  var elIdx = document.getElementById("q-idx");
+  var elCount = document.getElementById("q-count");
+  var elText = document.getElementById("q-text");
+  var elOpts = document.getElementById("q-opts");
+  var elPrev = document.getElementById("btn-prev");
+  var elFill = document.getElementById("meter-fill");
+  var elDot = document.getElementById("meter-dot");
+  var elCta = document.getElementById("result-cta");
+  var elHint = document.getElementById("foot-hint");
+  var toastEl = document.getElementById("toast");
+
+  var CN = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十"];
+  function cn(n) {
+    if (n <= 10) return CN[n];
+    if (n < 20) return "十" + CN[n - 10];
+    var t = Math.floor(n / 10), u = n % 10;
+    return CN[t] + "十" + (u ? CN[u] : "");
+  }
+  function pad2(n) { return n < 10 ? "0" + n : "" + n; }
+
+  function show(name) {
+    Object.keys(views).forEach(function (k) {
+      views[k].classList.toggle("is-active", k === name);
+    });
+  }
+
+  function answeredAll() { return answers.every(function (a) { return a >= 0; }); }
+
+  /* ---------- 渲染题目 ---------- */
+  function render() {
+    var q = Q[cur];
+    elIdx.textContent = cn(cur + 1);
+    elCount.textContent = pad2(cur + 1) + " / " + pad2(N);
+    elText.textContent = q.t;
+    var pct = ((cur + 1) / N) * 100;
+    elFill.style.width = pct + "%";
+    elDot.style.left = pct + "%";
+
+    elOpts.innerHTML = "";
+    orders[cur].forEach(function (oi, pos) {
+      var o = q.o[oi];
+      var btn = document.createElement("button");
+      btn.className = "opt" + (answers[cur] === oi ? " is-on" : "");
+      btn.type = "button";
+      btn.setAttribute("aria-pressed", answers[cur] === oi ? "true" : "false");
+      btn.setAttribute("data-pos", pos);
+      btn.innerHTML = '<span class="key">' + KEYS[pos] + '</span><span class="txt"></span>';
+      btn.querySelector(".txt").textContent = o.t;
+      btn.addEventListener("click", function (e) { pick(oi, btn, e); });
+      elOpts.appendChild(btn);
+    });
+
+    elPrev.disabled = cur === 0;
+    elHint.textContent = cur === N - 1 ? "答完就能看结果" : "凭直觉，别权衡";
+    elCta.classList.toggle("is-hidden", !answeredAll());
+  }
+
+  /* ---------- 选择：高亮 + 轻微缩放 + 涟漪 ---------- */
+  function pick(oi, btn, ev) {
+    if (locked) return;
+    answers[cur] = oi;
+    Array.prototype.forEach.call(elOpts.children, function (b) {
+      b.classList.remove("is-on");
+      b.setAttribute("aria-pressed", "false");
+      var rp = b.querySelector(".ripple");
+      if (rp) rp.remove();
+    });
+    btn.classList.add("is-on");
+    btn.setAttribute("aria-pressed", "true");
+
+    var rp = document.createElement("span");
+    var r = Math.max(btn.offsetWidth, btn.offsetHeight) * 0.9;
+    var rect = btn.getBoundingClientRect();
+    var x = (ev && ev.clientX ? ev.clientX - rect.left : rect.width / 2);
+    var y = (ev && ev.clientY ? ev.clientY - rect.top : rect.height / 2);
+    rp.className = "ripple";
+    rp.style.width = rp.style.height = r + "px";
+    rp.style.left = (x - r / 2) + "px";
+    rp.style.top = (y - r / 2) + "px";
+    btn.appendChild(rp);
+    setTimeout(function () { if (rp.parentNode) rp.remove(); }, 620);
+
+    if (cur < N - 1) {
+      locked = true;
+      setTimeout(function () { locked = false; cur++; render(); }, 380);
+    } else {
+      elCta.classList.remove("is-hidden");
+      elHint.textContent = "四十问答完，可以看结果了";
+    }
+  }
+
+  /* ---------- 计分 ---------- */
+  function profile() {
+    var s = {};
+    AXES.forEach(function (a) { s[a.k] = 0; });
+    answers.forEach(function (oi, qi) {
+      if (oi < 0) return;
+      var d = Q[qi].o[oi]._d;
+      for (var k in d) { if (k in s) s[k] += d[k]; }
+    });
+    var v = {};
+    AXES.forEach(function (a) {
+      var k = a.k, val = s[k] - expect[k], m = val >= 0 ? maxPos[k] : maxNeg[k];
+      v[k] = Math.max(-1, Math.min(1, val / (m || 1)));
+    });
+    return v;
+  }
+
+  /* 相关系数匹配：先各自去掉八维平均，只看“形状”是否吻合，避免整体偏正的人被拉向同一类 */
+  function matchIdentity(v) {
+    var pm = 0;
+    AXES.forEach(function (a) { pm += v[a.k]; });
+    pm = pm / AXES.length;
+    var pv = [], pn = 0;
+    AXES.forEach(function (a) { var d = v[a.k] - pm; pv.push(d); pn += d * d; });
+    pn = Math.sqrt(pn);
+    if (!pn) return IDS[0];
+    var best = IDS[0], bestSim = -2;
+    IDS.forEach(function (id) {
+      var sm = 0;
+      id.sig.forEach(function (x) { sm += x; });
+      sm = sm / id.sig.length;
+      var num = 0, sn = 0;
+      id.sig.forEach(function (x, i) { var q = x - sm; num += pv[i] * q; sn += q * q; });
+      sn = Math.sqrt(sn);
+      var sim = sn ? num / (pn * sn) : -2;
+      if (sim > bestSim) { bestSim = sim; best = id; }
+    });
+    return best;
+  }
+
+  /* ---------- 结果渲染 ---------- */
+  function renderChart(v) {
+    var wrap = document.getElementById("r-chart");
+    wrap.innerHTML = "";
+    DATA.chartAxes.forEach(function (k) {
+      var a = AX[k], val = v[k] || 0;
+      var row = document.createElement("div");
+      row.className = "axis";
+      row.innerHTML =
+        '<span class="axis-l">' + a.l + '</span>' +
+        '<div class="axis-track"><span class="axis-mid"></span>' +
+        '<span class="axis-fill"></span><span class="axis-dot"></span></div>' +
+        '<span class="axis-r">' + a.r + '</span>';
+      wrap.appendChild(row);
+
+      var fill = row.querySelector(".axis-fill");
+      var dot = row.querySelector(".axis-dot");
+      var color = val >= 0 ? "var(--jade)" : "#7B6480";
+      fill.style.background = color;
+      dot.style.background = color;
+      dot.style.boxShadow = "0 0 0 3px " + (val >= 0 ? "rgba(163,86,122,.12)" : "rgba(123,100,128,.16)");
+
+      if (Math.abs(val) > 0.22) {
+        var strong = val > 0 ? row.querySelector(".axis-l") : row.querySelector(".axis-r");
+        strong.style.color = "var(--ink)";
+        strong.style.fontWeight = "500";
+      }
+
+      // 延迟一帧再赋宽度，让动画从中心长出来；左侧为正、右侧为负
+      setTimeout(function () {
+        var shown = Math.sign(val) * Math.pow(Math.abs(val), 0.78);
+        var half = Math.abs(shown) * 50;
+        fill.style.width = half + "%";
+        fill.style.left = (shown >= 0 ? 50 - half : 50) + "%";
+        dot.style.left = (50 - shown * 50) + "%";
+      }, 120);
+    });
+  }
+
+  function showResult() {
+    var v = profile();
+    var id = matchIdentity(v);
+    document.getElementById("r-name").textContent = id.name;
+    document.getElementById("r-tag").textContent = id.tag;
+    document.getElementById("r-slogan").textContent = "「" + id.slogan + "」";
+    document.getElementById("r-why").textContent = id.why;
+    document.getElementById("r-secret").textContent = id.secret;
+    renderChart(v);
+    show("result");
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }
+
+  /* ---------- 分享文案 ---------- */
+  function shareText(id) {
+    /* 只复制结果本身，不加任何引导语；想加自己的号，把最后一行注释打开即可 */
+    var txt = "我的人格魅力标签是「" + id.name + "」\n" +
+      id.tag + " · " + id.slogan;
+    // if (SHOP_NAME) txt += "\n小红书搜我：" + SHOP_NAME;
+    return txt;
+  }
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add("is-on");
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function () { toastEl.classList.remove("is-on"); }, 2000);
+  }
+  function copyText(txt, okMsg) {
+    var done = function () { toast(okMsg); };
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(txt).then(done, fallback);
+    } else { fallback(); }
+    function fallback() {
+      var ta = document.createElement("textarea");
+      ta.value = txt;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); done(); }
+      catch (e) { toast("复制失败，长按选择即可"); }
+      document.body.removeChild(ta);
+    }
+  }
+  function currentIdentity() {
+    var v = profile();
+    return matchIdentity(v);
+  }
+
+  /* ---------- 事件 ---------- */
+  document.getElementById("btn-start").addEventListener("click", function () {
+    cur = 0;
+    render();
+    show("quiz");
+    window.scrollTo({ top: 0, behavior: "auto" });
+  });
+
+  elPrev.addEventListener("click", function () {
+    if (cur > 0) { cur--; render(); }
+  });
+
+  document.getElementById("btn-submit").addEventListener("click", showResult);
+
+  document.getElementById("btn-retest").addEventListener("click", function () {
+    answers = new Array(N).fill(-1);
+    cur = 0;
+    show("start");
+    window.scrollTo({ top: 0, behavior: "auto" });
+  });
+
+  document.getElementById("btn-copy").addEventListener("click", function () {
+    copyText(shareText(currentIdentity()), "文案已复制，去发给朋友吧");
+  });
+
+/* ===== 结果卡图片 ===== */
+  var SERIF = '"Noto Serif SC","Songti SC","STSong",serif';
+  var SANS = '"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif';
+  var cardURL = "";
+
+  function ensureFonts() {
+    if (!document.fonts || !document.fonts.load) return Promise.resolve();
+    return Promise.all([
+      document.fonts.load('700 110px "Noto Serif SC"'),
+      document.fonts.load('400 35px "Noto Serif SC"'),
+      document.fonts.load('400 33px "Noto Sans SC"')
+    ]).catch(function () { });
+  }
+
+  function spaced(ctx, text, x, y, gap) {
+    var cx = x;
+    for (var i = 0; i < text.length; i++) {
+      ctx.fillText(text.charAt(i), cx, y);
+      cx += ctx.measureText(text.charAt(i)).width + gap;
+    }
+  }
+
+  function wrap(ctx, text, maxW) {
+    /* 中文避头尾：标点不出现在行首，开引号不留行尾 */
+    var NO_HEAD = "，。、；：！？）」』”’…·%％", NO_TAIL = "（「『“‘";
+    var lines = [], line = "";
+    for (var i = 0; i < text.length; i++) {
+      var ch = text.charAt(i);
+      if (line && ctx.measureText(line + ch).width > maxW) {
+        if (NO_HEAD.indexOf(ch) >= 0) { line += ch; lines.push(line); line = ""; continue; }
+        var last = line.charAt(line.length - 1);
+        if (NO_TAIL.indexOf(last) >= 0 && line.length > 1) { lines.push(line.slice(0, -1)); line = last + ch; continue; }
+        lines.push(line); line = ch;
+      } else { line += ch; }
+    }
+    if (line) lines.push(line);
+    /* 兜底：万一某行以标点开头，并回上一行，避免出现孤零零的句号 */
+    for (var k = lines.length - 1; k > 0; k--) {
+      if (NO_HEAD.indexOf(lines[k].charAt(0)) >= 0) { lines[k - 1] += lines[k]; lines.splice(k, 1); }
+    }
+    return lines;
+  }
+
+  function layoutCard(ctx, id, v, draw, s, extra) {
+    s = s || 1;
+    extra = extra || 0;
+    var W = 1080, PAD = 88, maxW = W - PAD * 2, y = 112;
+    function px(n) { return Math.round(n * s); }
+
+    ctx.font = '400 ' + px(20) + 'px ' + SANS;
+    if (draw) { ctx.fillStyle = "rgba(112,94,124,.9)"; spaced(ctx, "人格魅力测试", PAD, y, 6); }
+
+    y += px(60);
+    if (draw) { ctx.font = '400 ' + px(24) + 'px ' + SANS; ctx.fillStyle = "#8B7C97"; ctx.fillText("你的人格魅力标签", PAD, y); }
+
+    var ns = px(80);
+    ctx.font = '700 ' + ns + 'px ' + SERIF;
+    while (ctx.measureText(id.name).width > maxW && ns > px(46)) { ns -= 2; ctx.font = '700 ' + ns + 'px ' + SERIF; }
+    var nameBase = y + px(86);
+    if (draw) { ctx.fillStyle = "#2B2033"; ctx.fillText(id.name, PAD, nameBase); }
+    y = nameBase;
+
+    ctx.font = '400 ' + px(26) + 'px ' + SANS;
+    if (draw) { ctx.fillStyle = "#594A66"; ctx.fillText(id.tag, PAD, y + px(42)); }
+    y = y + px(42);
+
+    ctx.font = '400 ' + px(32) + 'px ' + SERIF;
+    var lhS = px(44);
+    var sl = wrap(ctx, "「" + id.slogan + "」", maxW);
+    if (draw) {
+      ctx.fillStyle = "#7B3D55";
+      for (var i = 0; i < sl.length; i++) ctx.fillText(sl[i], PAD, y + px(44) + i * lhS);
+    }
+    y = y + px(44) + sl.length * lhS;
+
+    y += px(30);
+    if (draw) {
+      ctx.strokeStyle = "rgba(43,32,51,.2)"; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(PAD, y); ctx.lineTo(W - PAD, y); ctx.stroke();
+    }
+    y += px(44);
+
+    function block(title, body) {
+      ctx.font = '400 ' + px(20) + 'px ' + SANS;
+      if (draw) { ctx.fillStyle = "#A3567A"; spaced(ctx, title, PAD, y, 5); }
+      y += px(32);
+      ctx.font = '400 ' + px(27) + 'px ' + SERIF;
+      var lh = px(42);
+      var ls = wrap(ctx, body, maxW);
+      if (draw) {
+        ctx.fillStyle = "#2B2033";
+        for (var j = 0; j < ls.length; j++) ctx.fillText(ls[j], PAD, y + px(34) + j * lh);
+      }
+      y = y + px(34) + ls.length * lh;
+    }
+    block("为什么是你", id.why);
+    y += px(26);
+    block("隐藏特质 · 小彩蛋", id.secret);
+
+    y += px(54) + Math.round(extra * 0.55);
+    ctx.font = '400 ' + px(20) + 'px ' + SANS;
+    if (draw) { ctx.fillStyle = "#A3567A"; spaced(ctx, "你的六维气质", PAD, y, 5); }
+    y += px(26);
+
+    var trackL = PAD + px(94), trackR = W - PAD - px(94);
+    var midX = (trackL + trackR) / 2, halfTrack = (trackR - trackL) / 2;
+    var rowH = px(39), barH = Math.max(4, px(6)), dotR = Math.max(5, px(6.5));
+    DATA.chartAxes.forEach(function (k) {
+      var ax = AX[k], val = v[k] || 0;
+      var shown = Math.sign(val) * Math.pow(Math.abs(val), 0.78);
+      var rowY = y + px(25), strong = Math.abs(val) > 0.2;
+      ctx.font = '400 ' + px(24) + 'px ' + SANS;
+      ctx.textAlign = "right";
+      if (draw) { ctx.fillStyle = strong ? "#2B2033" : "#8B7C97"; ctx.fillText(ax.l, trackL - px(18), rowY); }
+      ctx.textAlign = "left";
+      if (draw) { ctx.fillStyle = strong ? "#2B2033" : "#8B7C97"; ctx.fillText(ax.r, trackR + px(18), rowY); }
+      if (draw) {
+        ctx.strokeStyle = "rgba(43,32,51,.20)"; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.moveTo(trackL, rowY - 8); ctx.lineTo(trackR, rowY - 8); ctx.stroke();
+        ctx.strokeStyle = "rgba(43,32,51,.28)";
+        ctx.beginPath(); ctx.moveTo(midX, rowY - 13); ctx.lineTo(midX, rowY - 3); ctx.stroke();
+        var wBar = Math.abs(shown) * halfTrack;
+        if (wBar > 1) {
+          ctx.fillStyle = val >= 0 ? "#A3567A" : "#7B6480";
+          ctx.fillRect(val >= 0 ? midX - wBar : midX, rowY - 8 - barH / 2, wBar, barH);
+          ctx.beginPath();
+          ctx.arc(val >= 0 ? midX - wBar : midX + wBar, rowY - 8, dotR, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      y += rowH;
+    });
+    ctx.textAlign = "left";
+    return y;
+  }
+
+  function buildCard(id) {
+    var W = 1080, v = profile();
+    var probe = document.createElement("canvas").getContext("2d");
+    var s = 1, end = 0;
+    for (s = 1; s >= 0.76; s -= 0.03) {
+      end = layoutCard(probe, id, v, false, s);
+      if (end <= 1188) break;
+    }
+    var H = Math.max(1440, Math.round(end + 236));
+    var extra = Math.max(0, H - 236 - end);
+
+    var cv = document.createElement("canvas");
+    cv.width = W; cv.height = H;
+    var ctx = cv.getContext("2d");
+
+    var g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, "#FCF7FA"); g.addColorStop(.55, "#F2E9F0"); g.addColorStop(1, "#E9DEE8");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+
+    var r1 = ctx.createRadialGradient(80, 220, 0, 80, 220, 500);
+    r1.addColorStop(0, "rgba(214,190,210,.5)"); r1.addColorStop(1, "rgba(214,190,210,0)");
+    ctx.fillStyle = r1; ctx.fillRect(0, 0, W, 780);
+
+    function ridge(pts, alpha) {
+      var step = W / (pts.length - 1);
+      ctx.beginPath();
+      ctx.moveTo(0, H - pts[0]);
+      for (var i = 1; i < pts.length; i++) ctx.lineTo(Math.round(i * step), H - pts[i]);
+      ctx.lineTo(W, H); ctx.lineTo(0, H); ctx.closePath();
+      ctx.fillStyle = "rgba(58,40,66," + alpha + ")"; ctx.fill();
+    }
+    ridge([62, 96, 74, 110, 66, 92, 70], .1);
+    ridge([26, 50, 36, 58, 32, 46, 28], .15);
+    ridge([0, 14, 8, 18, 6, 12, 4], .24);
+
+    layoutCard(ctx, id, v, true, s, extra);
+
+    ctx.save();
+    ctx.translate(W - 138, 190); ctx.rotate(-.04);
+    ctx.strokeStyle = "#7B3D55"; ctx.lineWidth = 3;
+    ctx.strokeRect(-40, -40, 80, 80);
+    ctx.fillStyle = "#A3567A"; ctx.font = '400 28px ' + SERIF; ctx.textAlign = "center";
+    ctx.fillText("魅", 0, -3); ctx.fillText("力", 0, 29);
+    ctx.restore();
+
+    ctx.textAlign = "left";
+    ctx.font = '400 21px ' + SANS;
+    ctx.fillStyle = "#594A66";
+    spaced(ctx, "测一测 | 我的人格魅力标签", 88, H - 106, 1.5);
+
+    return cv.toDataURL("image/png");
+  }
+
+  function openSaveSheet() {
+    var id = currentIdentity();
+    if (!id) return;
+    var btn = document.getElementById("btn-save"), img = document.getElementById("save-img");
+    btn.disabled = true; btn.textContent = "正在生成…";
+    ensureFonts().then(function () {
+      try {
+        cardURL = buildCard(id);
+        img.src = cardURL;
+        document.getElementById("save-sheet").classList.add("is-on");
+      } catch (err) {
+        toast("图片没生成出来，先截图凑一下");
+      }
+      btn.disabled = false; btn.textContent = "保存图片";
+    });
+  }
+
+  document.getElementById("btn-save").addEventListener("click", openSaveSheet);
+  document.getElementById("btn-close-save").addEventListener("click", function () {
+    document.getElementById("save-sheet").classList.remove("is-on");
+  });
+  document.getElementById("save-sheet").addEventListener("click", function (e) {
+    if (e.target === this) this.classList.remove("is-on");
+  });
+  document.getElementById("btn-download").addEventListener("click", function () {
+    var id = currentIdentity();
+    if (!cardURL) return;
+    var a = document.createElement("a");
+    a.href = cardURL;
+    a.download = "人格魅力标签-" + (id ? id.name : "结果") + ".png";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    toast("已保存到下载目录");
+  });
+
+  document.getElementById("btn-share").addEventListener("click", function () {
+    var id = currentIdentity(), txt = shareText(id);
+    if (navigator.share) {
+      navigator.share({ title: "测一测 | 你自带哪种人格魅力标签", text: txt }).catch(function (err) {
+        if (err && err.name === "AbortError") return;   // 用户自己取消，不提示
+        copyText(txt, "这个环境不支持直接分享，文案已复制");
+      });
+    } else {
+      copyText(txt, "已复制，粘贴给朋友就行");
+    }
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (!views.quiz.classList.contains("is-active")) return;
+    var n = parseInt(e.key, 10);
+    if (n >= 1 && n <= 4) {
+      var btn = elOpts.children[n - 1];
+      if (btn) btn.click();
+    } else if (e.key === "ArrowLeft") {
+      elPrev.click();
+    }
+  });
+})();
+</script>
+</body>
+</html>
